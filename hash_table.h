@@ -20,7 +20,7 @@ int			hash(char *str, int tableSize);
 HashTable	*initHashTable(int tableSize);
 void		freeHashTable(HashTable *tab);
 void		showHashTable(HashTable *tab);
-void		insert(HashTable * tab, char *key, int value);
+void		insert(HashTable **tab, char *key, int value);
 Node		*search(HashTable *tab, char *key);
 void		deleteFromHashTable(HashTable *tab, char *key);
 bool		isQuiteFull(HashTable *tab);

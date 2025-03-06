@@ -80,13 +80,13 @@ void	showHashTable(HashTable *tab)
 
 void	insert(HashTable **tab, char *key, int value)
 {
-	HashTable	*test = *tab;
-	int 	hashedKey = hash(key, test->size);
+	HashTable	*tmp = *tab;
+	int 	hashedKey = hash(key, tmp->size);
 	Node	*new = malloc(sizeof(Node));
 	if (new == NULL)
 		return ;
 
-	if (search(test, key) != NULL)
+	if (search(tmp, key) != NULL)
 	{
 		free(new);
 		return ;
@@ -95,10 +95,10 @@ void	insert(HashTable **tab, char *key, int value)
 	strcpy(new->key, key);
 	new->value = value;
 
-	new->next = test->table[hashedKey];
-	test->table[hashedKey] = new;
+	new->next = tmp->table[hashedKey];
+	tmp->table[hashedKey] = new;
 
-	if (isQuiteFull(test))
+	if (isQuiteFull(tmp))
 		enhanceHashTableSize(tab);
 }
 
