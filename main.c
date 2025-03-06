@@ -16,6 +16,14 @@ int	main(void)
 
 	showHashTable(hashTable);
 
+	deleteFromHashTable(&hashTable, "testd");
+	deleteFromHashTable(&hashTable, "teste");
+	deleteFromHashTable(&hashTable, "testf");
+	deleteFromHashTable(&hashTable, "testg");
+	deleteFromHashTable(&hashTable, "testh");
+
+	showHashTable(hashTable);
+
 	freeHashTable(hashTable);
 	return (0);
 }

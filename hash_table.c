@@ -101,7 +101,7 @@ void	insert(HashTable **tab, char *key, int value)
 	new->next = tmp->table[hashedKey];
 	tmp->table[hashedKey] = new;
 
-	if (isQuiteFull(tmp))
+	if (loadFactor(tmp) >= 0.75)
 		enhanceHashTableSize(tab);
 }
 
@@ -119,19 +119,22 @@ Node	*search(HashTable *tab, char *key)
 	return (NULL);
 }
 
-void	deleteFromHashTable(HashTable *tab, char *key)
+void	deleteFromHashTable(HashTable **tab, char *key)
 {
-	int		hashedKey = hash(key, tab->size);
-	Node	*curr = tab->table[hashedKey];
-	Node	*aux = NULL;
+	HashTable	*tmp = *tab;
+	int			hashedKey = hash(key, tmp->size);
+	Node		*curr = tmp->table[hashedKey];
+	Node		*aux = NULL;
 
 	if (curr == NULL)
 		return ;
 	if (!strcmp(curr->key, key))
 	{
 		aux = curr;
-		tab->table[hashedKey] = curr->next;
+		tmp->table[hashedKey] = curr->next;
 		free(aux);
+		if (loadFactor(tmp) <= 0.45)
+			shrinkHashTableSize(tab);
 		return ;
 	}
 	while (curr->next != NULL)
@@ -141,13 +144,16 @@ void	deleteFromHashTable(HashTable *tab, char *key)
 			aux = curr->next;
 			curr->next = curr->next->next;
 			free(aux);
+			if (loadFactor(tmp) <= 0.45)
+				shrinkHashTableSize(tab);
 			return ;
 		}
 		curr = curr->next;
 	}
+
 }
 
-bool	isQuiteFull(HashTable *tab)
+float	loadFactor(HashTable *tab)
 {
 	int	i = 0;
 	int	usedRow = 0;
@@ -158,8 +164,8 @@ bool	isQuiteFull(HashTable *tab)
 			usedRow++;
 		i++;
 	}
-
-	return (((float)usedRow / (float)tab->size) >= 0.75);
+	
+	return ((float)usedRow / (float)tab->size);
 }
 
 void    enhanceHashTableSize(HashTable **tab)
@@ -170,6 +176,30 @@ void    enhanceHashTableSize(HashTable **tab)
 	Node		*curr;
 
 	new = initHashTable(tmp->size * 2);
+
+	while (i < tmp->size)
+	{
+		curr = tmp->table[i];
+		while (curr != NULL)
+		{
+			insert(&new, curr->key, curr->value);
+			curr = curr->next;
+		}
+		i++;
+	}
+
+	*tab = new;
+	freeHashTable(tmp);
+}
+
+void	shrinkHashTableSize(HashTable **tab)
+{
+	HashTable	*new = NULL;
+	HashTable	*tmp = *tab;
+	int			i = 0;
+	Node		*curr;
+
+	new = initHashTable(tmp->size / 2);
 
 	while (i < tmp->size)
 	{
