@@ -81,8 +81,8 @@ void	showHashTable(HashTable *tab)
 void	insert(HashTable **tab, char *key, int value)
 {
 	HashTable	*tmp = *tab;
-	int 	hashedKey = hash(key, tmp->size);
-	Node	*new = malloc(sizeof(Node));
+	int		 	hashedKey = hash(key, tmp->size);
+	Node		*new = malloc(sizeof(Node));
 	if (new == NULL)
 		return ;
 
