@@ -24,9 +24,12 @@ HashTable	*initHashTable(int tableSize)
 		return (NULL);
 
 	tab->size = tableSize;
-	tab->table = malloc(sizeof(Node) * tableSize); 
+	tab->table = malloc(sizeof(Node*) * tableSize); 
 	if (tab->table == NULL)
+	{
+		free(tab);
 		return (NULL);
+	}
 
 	while (i < tableSize)
 	{
@@ -147,7 +150,7 @@ void	deleteFromHashTable(HashTable *tab, char *key)
 bool	isQuiteFull(HashTable *tab)
 {
 	int	i = 0;
-	int	usedRow = 0.0;
+	int	usedRow = 0;
 
 	while (i < tab->size)
 	{
@@ -156,7 +159,7 @@ bool	isQuiteFull(HashTable *tab)
 		i++;
 	}
 
-	return ((usedRow / (float)tab->size) >= 0.75);
+	return (((float)usedRow / (float)tab->size) >= 0.75);
 }
 
 void    enhanceHashTableSize(HashTable **tab)
