@@ -133,7 +133,7 @@ void	deleteFromHashTable(HashTable **tab, char *key)
 		aux = curr;
 		tmp->table[hashedKey] = curr->next;
 		free(aux);
-		if (loadFactor(tmp) <= 0.45)
+		if (loadFactor(tmp) <= 0.25)
 			shrinkHashTableSize(tab);
 		return ;
 	}
